@@ -1,12 +1,15 @@
 const express = require("express");
 const app = express();
-
 const router = require("./apis/products/routes");
+const morgan = require("morgan");
+
 let products = require("./data");
-const connectDb = require("./database");
+const connectDb = require("./db/database");
 
 app.use(express.json());
-app.use(router);
+app.use(morgan("dev"));
+
+app.use("/api/products", router);
 
 connectDb();
 

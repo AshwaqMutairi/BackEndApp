@@ -1,7 +1,7 @@
 const products = require("../../data");
-const Product = require("../../models/Product");
+const Product = require("../../db/models/Product");
 
-//LIST FETCH
+//LIST FETCH 👍🏻
 exports.productListFetch = async (req, res) => {
   try {
     const products = await Product.find();
@@ -12,22 +12,27 @@ exports.productListFetch = async (req, res) => {
   }
 };
 
-//DETAIL FETCH
-exports.productDetailFetch = (req, res) => {
+//DETAIL FETCH 👍🏻
+exports.productDetailFetch = async (req, res) => {
+  const { productId } = req.params;
   try {
+    const product = await Product.findById(productId);
+
     if (product) {
-      res.json(products.id);
+      res.json(product);
     } else {
       return res
         .status(404)
         .json("Opps! this product is not found SO cant be fitched!");
     }
   } catch (error) {
-    console.log("error! sorry cant FETCH this product detail");
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
-//CREAT
+//CREAT 👍🏻
 exports.productCreate = async (req, res) => {
   try {
     const newProduct = await Product.create(req.body);
@@ -39,11 +44,8 @@ exports.productCreate = async (req, res) => {
   }
 };
 
-//DELETE
+//DELETE 👍🏻
 exports.productDelete = async (req, res) => {
-  //   const productId = req.params.productId;
-  //   const product = products.find((product) => product.id === +productId);
-
   const { productId } = req.params;
   try {
     const product = await Product.findById(productId);
@@ -59,6 +61,27 @@ exports.productDelete = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "error! sorry cant DELETE this product",
+    });
+  }
+};
+
+//UPDATE 👍🏻
+exports.productUpdate = async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const product = await Product.findById(productId);
+
+    if (product) {
+      const updatedProduct = await product.updateOne(req.body, { new: true });
+      return res.json(updatedProduct);
+    } else {
+      return res.status(404).json({
+        message: "Opps! cant UPDATE",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
     });
   }
 };
