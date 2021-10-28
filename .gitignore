@@ -1,3 +1,6 @@
+# this will make the database file secret
+database.js
+
 # Logs
 logs
 *.log

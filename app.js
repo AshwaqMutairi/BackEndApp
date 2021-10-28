@@ -1,11 +1,15 @@
 const express = require("express");
-const products = require("./data");
 const app = express();
+
+const router = require("./apis/products/routes");
+let products = require("./data");
+const connectDb = require("./database");
+
+app.use(express.json());
+app.use(router);
+
+connectDb();
 
 app.listen(8000, () => {
   console.log("The application is running on localhost:8000");
-});
-
-app.get("/api/products", (req, res) => {
-  res.json(products);
 });
